@@ -1,6 +1,30 @@
-		<script type="text/javascript">
-			wbos.CssTools.MediaQueryFallBack.LoadCss('{+Link.base+}css/screen.css', '{+Link.base+}css/handheld.css', 660)
-			codeview.classFilter.Init()
+<script type="text/javascript">
+			wbos.CssTools.MediaQueryFallBack.LoadCss('{+Link.base+}css/screen.css', '{+Link.base+}css/handheld.css', 660);
+
+            codeview.classFilter.Init();
+
+            var searchTerm = ((window.location.search).split('='))[1];
+
+            if(searchTerm){
+                var numDocLinks = document.links.length;
+                for (i = 3; i < numDocLinks; i++) {
+                    var currentLink = document.links[i];
+                    var anchorIndex = currentLink.href.indexOf('#');
+                    if(anchorIndex !== -1) {
+                        currentLink.href = currentLink.href.slice(0, anchorIndex) + "?classFilter=" + searchTerm + currentLink.href.slice(anchorIndex);
+                    }
+                    else {
+                        currentLink.href = currentLink.href + "?classFilter=" + searchTerm;
+                    }
+                }
+            }
+            else {
+                searchTerm="";
+            }
+            // codeview.filter(searchTerm);
+
+			// Syntax Highlighting
+			SyntaxHighlighter.all();
 		</script>
 	</body>
 </html>

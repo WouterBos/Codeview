@@ -12,13 +12,13 @@
 	background-color:rgba(0,0,0,0.10196) !important;
 }
 .syntaxhighlighter .line.highlighted.number {
-	color:rgba(179,179,179,0.95686) !important;
+	color:rgba(150, 150, 150, 0.95686) !important;
 }
 .syntaxhighlighter table caption {
 	color:black !important;
 }
 .syntaxhighlighter .gutter {
-	color:rgba(179,179,179,0.95686) !important;
+	color:rgba(150, 150, 150, 0.95686) !important;
 }
 .syntaxhighlighter .gutter .line {
 	border-right:3px solid transparent !important;

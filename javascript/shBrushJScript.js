@@ -39,7 +39,30 @@
 		;
 
 		var r = SyntaxHighlighter.regexLib;
+		var links = document.links;
+        var numLinks = links.length;
+        var symbols = [];
+        for (var i =0; i < numLinks; i++) {
+            var currentLink = links[i].href;
+            var start = currentLink.lastIndexOf("symbols/");
+            var end = currentLink.lastIndexOf(".html");
+            var symbolName = currentLink.slice(start + 8.0, end);
+            var periodIndex = symbolName.indexOf(".");
+            if(periodIndex !== -1) {
+                symbolName = symbolName.slice(periodIndex + 1.0);
+            }
+            if (start !== -1) {
+                symbols.push(symbolName);
+            }
+        }
 
+        var numSymbols = symbols.length;
+        var symbolKeywords = "";
+        for (i = 0; i < numSymbols; i++) {
+            if(symbols[i] !== "") {
+                symbolKeywords += symbols[i] + " ";
+            }
+        }
 		this.regexList = [
 			{ regex: r.multiLineDoubleQuotedString,																					css: 'string' },		// double quoted strings
 			{ regex: r.multiLineSingleQuotedString,																					css: 'string' },		// single quoted strings
@@ -55,7 +78,8 @@
 			{ regex: /\|\||\&\&|\>|\<|\>\=|\<\=|\=\=|\=\=\=|\!\=|\!\=\=|\+|\+\+|\-|\-\-|\=/gm,										css: 'keyword' },		// operations
 			{ regex: new RegExp(this.getKeywords(keywords), 'gm'),																	css: 'keyword' },		// keywords
 			{ regex: new RegExp(this.getKeywords(constants), 'gm'),																	css: 'constants' },		// constants
-			{ regex: new RegExp(this.getKeywords(identifiers), 'gm'),																css: 'identifier' }		// identifiers
+			{ regex: new RegExp(this.getKeywords(identifiers), 'gm'),																css: 'identifier' },	// identifiers
+			{ regex: new RegExp(this.getKeywords(symbolKeywords), 'gm'),															css: 'symbol'}			// symbol
 			];
 
 		this.forHtmlScript(r.scriptScriptTags);

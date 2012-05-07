@@ -43,20 +43,27 @@ div.index div.menu {
 }
 
 div.index div.indexLinks {
-	margin-top: 13px;
+	/*margin-top: 13px;*/
+	padding: 8px 0 0 0;
 	position: absolute;
 	right: 30px;
 }
 
 div.index div.indexLinks a {
-	color: #999999;
+	font-family: M1m, Arial, sans-serif;
+    font-size: 1.6em;
+	color: #3333CC;
 	text-transform: lowercase;
+	margin-right: 2px;
+	margin-bottom: 0.5em;
+    border-right: 1px solid #999999;
+    padding-right: 4px;
 }
 
-div.index div.indexLinks a:first-child {
-	margin-right: 3px;
-	border-right: 1px solid #999999;
-	padding-right: 5px;
+div.index div.indexLinks a:last-child {
+	margin-right: 2px;
+	border-right: 0px;
+	padding-right: 4px;
 }
 
 div.index input.classFilter {
@@ -130,8 +137,33 @@ div.content *.classTitle {
 	box-shadow: 0px 0px 10px #c4c4c4;
 }
 
+div.content *.box {
+    position: relative;
+    left: -10px;
+    margin-bottom: 15px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border-radius: 15px;
+    padding: 5px 15px;
+    padding-bottom: 10px;
+    background-color: #FFFFFF;
+    background-color: rgba(255, 255, 255, 0.5);
+    -moz-box-shadow: 0px 0px 10px #c4c4c4;
+    -webkit-box-shadow: 0px 0px 10px #c4c4c4;
+    box-shadow: 0px 0px 10px #c4c4c4;
+}
+
+div.content *.indexHeading {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+div.content .right {
+    text-align: right;
+}
+
 div.content div.intro {
-	margin: 15px 0 45px
+	margin: 15px 0px 15px
 }
 
 div.content p.summary {
@@ -162,11 +194,11 @@ div.content div.props {
 }
 
 div.content div.hr {
-	margin: 0 10px 0 0;
-	height: 4em;
+	margin: 10px 0px 10px 0px;
+	height: 1px;
+	color: #DADADA;
+	background-color: #DADADA;
 }
-
-
 
 table.summaryTable {
 	position: relative;
@@ -179,7 +211,7 @@ table.summaryTable {
 	-ms-box-sizing: content-box;
 	-o-box-sizing: content-box;
 	-icab-box-sizing: content-box;
-	-khtml-box-sizing: content-box; 
+	-khtml-box-sizing: content-box;
 }
 
 *.sectionTitle {
@@ -294,4 +326,3 @@ pre.code {
 /*
  * END MEDIA QUERY CHECK
  */
-
