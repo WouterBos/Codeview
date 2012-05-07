@@ -11,8 +11,8 @@ function publish(symbolSet) {
 		fontsDir:    "css/fonts/",
 		jsDir:       "javascript/",
 		templateName: "Codeview",
-		templateVersion: "1.2",
-		templateLink: "http://www.thebrightlines.com/2010/05/06/new-template-for-jsdoctoolkit-codeview/"
+		templateVersion: "1.3",
+		templateLink: "https://github.com/ArkahnX/Codeview"
 	};
 
 	// is source output is suppressed, just display the links to the source file
@@ -167,7 +167,7 @@ function publish(symbolSet) {
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.cssDir+"screen.css", publish.conf.outDir+"/"+publish.conf.cssDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.cssDir+"handheld.css", publish.conf.outDir+"/"+publish.conf.cssDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.cssDir+"shCore.css", publish.conf.outDir+"/"+publish.conf.cssDir);
-	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.cssDir+"shThemeDefault.css", publish.conf.outDir+"/"+publish.conf.cssDir);
+	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.cssDir+"shTheme.css", publish.conf.outDir+"/"+publish.conf.cssDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.jsDir+"all.js", publish.conf.outDir+"/"+publish.conf.jsDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.jsDir+"html5.js", publish.conf.outDir+"/"+publish.conf.jsDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.jsDir+"shCore.js", publish.conf.outDir+"/"+publish.conf.jsDir);
