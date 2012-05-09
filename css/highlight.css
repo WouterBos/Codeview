@@ -14,6 +14,9 @@ code .quote {
 code .comment {
 	color:#0066FF;
 }
+pre code ol {
+	margin-bottom: 0!important;
+}
 pre {
 	color:rgba(150, 150, 150, 0.95686);
 	background-color:rgba(238,238,238,0.9215);
@@ -23,6 +26,7 @@ pre ol {
 	list-style-type:decimal-leading-zero;
 	font-family:Consolas, "Courier New";
 	margin:0;
+	margin-left:3em;
 	padding:0;
 }
 
