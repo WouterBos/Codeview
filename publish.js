@@ -12,7 +12,7 @@ function publish(symbolSet) {
 		jsDir:       "javascript/",
 		templateName: "Codeview",
 		templateVersion: "1.3",
-		templateLink: "https://github.com/ArkahnX/Codeview"
+		templateLink: "https://github.com/WouterBos/Codeview"
 	};
 
 	// is source output is suppressed, just display the links to the source file
@@ -52,14 +52,14 @@ function publish(symbolSet) {
 
 	// create the hilited source code files
 	var files = JSDOC.opt.srcFiles;
- 	for (var i = 0, l = files.length; i < l; i++) {
- 		var file = files[i];
- 		var srcDir = publish.conf.outDir + publish.conf.srcDir;
+	for (var i = 0, l = files.length; i < l; i++) {
+		var file = files[i];
+		var srcDir = publish.conf.outDir + publish.conf.srcDir;
 		makeSrcFile(file, srcDir);
- 	}
+	}
 
- 	// get a list of all the classes in the symbolset
- 	publish.classes = symbols.filter(isaClass).sort(makeSortby("alias"));
+	// get a list of all the classes in the symbolset
+	publish.classes = symbols.filter(isaClass).sort(makeSortby("alias"));
 
 	// create a filemap in which outfiles must be to be named uniquely, ignoring case
 	if (JSDOC.opt.u) {
@@ -91,51 +91,51 @@ function publish(symbolSet) {
 	publish.classes = symbols.filter(isGLSL).sort(makeSortby("alias"));
 
 	// create each of the glsl class pages
-    for (var i = 0, l = publish.classes.length; i < l; i++) {
-        var symbol = publish.classes[i];
+	for (var i = 0, l = publish.classes.length; i < l; i++) {
+		var symbol = publish.classes[i];
 
-        symbol.events = symbol.getEvents();   // 1 order matters
-        symbol.methods = symbol.getMethods(); // 2
+		symbol.events = symbol.getEvents();   // 1 order matters
+		symbol.methods = symbol.getMethods(); // 2
 
-        var output = "";
-        output = classTemplate.process(symbol);
+		var output = "";
+		output = classTemplate.process(symbol);
 
-        IO.saveFile(publish.conf.outDir+publish.conf.symbolsDir, ((JSDOC.opt.u)? Link.filemap[symbol.alias] : symbol.alias) + publish.conf.ext, output);
-    }
+		IO.saveFile(publish.conf.outDir+publish.conf.symbolsDir, ((JSDOC.opt.u)? Link.filemap[symbol.alias] : symbol.alias) + publish.conf.ext, output);
+	}
 	// create the GLSL index page
 	try {
-        var glslindexTemplate = new JSDOC.JsPlate(publish.conf.templatesDir+"glslfiles.tmpl");
-    }
-    catch(e) { print(e.message); quit(); }
+		var glslindexTemplate = new JSDOC.JsPlate(publish.conf.templatesDir+"glslfiles.tmpl");
+	}
+	catch(e) { print(e.message); quit(); }
 
-    var glslIndex = glslindexTemplate.process(publish.classes);
-    IO.saveFile(publish.conf.outDir, ("glslIndex")+publish.conf.ext, glslIndex);
-    glslindexTemplate = glslIndex = classes = null;
+	var glslIndex = glslindexTemplate.process(publish.classes);
+	IO.saveFile(publish.conf.outDir, ("glslIndex")+publish.conf.ext, glslIndex);
+	glslindexTemplate = glslIndex = classes = null;
 
 	// Javascript
-    publish.classes = symbols.filter(isJS).sort(makeSortby("alias"));
+	publish.classes = symbols.filter(isJS).sort(makeSortby("alias"));
 
-    // create each of the javascript class pages
-    for (var i = 0, l = publish.classes.length; i < l; i++) {
-        var symbol = publish.classes[i];
+	// create each of the javascript class pages
+	for (var i = 0, l = publish.classes.length; i < l; i++) {
+		var symbol = publish.classes[i];
 
-        symbol.events = symbol.getEvents();   // 1 order matters
-        symbol.methods = symbol.getMethods(); // 2
+		symbol.events = symbol.getEvents();   // 1 order matters
+		symbol.methods = symbol.getMethods(); // 2
 
-        var output = "";
-        output = classTemplate.process(symbol);
+		var output = "";
+		output = classTemplate.process(symbol);
 
-        IO.saveFile(publish.conf.outDir+publish.conf.symbolsDir, ((JSDOC.opt.u)? Link.filemap[symbol.alias] : symbol.alias) + publish.conf.ext, output);
-    }
-    // create the Javscript index page
-    try {
-        var jsindexTemplate = new JSDOC.JsPlate(publish.conf.templatesDir+"jsfiles.tmpl");
-    }
-    catch(e) { print(e.message); quit(); }
+		IO.saveFile(publish.conf.outDir+publish.conf.symbolsDir, ((JSDOC.opt.u)? Link.filemap[symbol.alias] : symbol.alias) + publish.conf.ext, output);
+	}
+	// create the Javscript index page
+	try {
+		var jsindexTemplate = new JSDOC.JsPlate(publish.conf.templatesDir+"jsfiles.tmpl");
+	}
+	catch(e) { print(e.message); quit(); }
 
-    var jsIndex = jsindexTemplate.process(publish.classes);
-    IO.saveFile(publish.conf.outDir, ("jsIndex")+publish.conf.ext, jsIndex);
-    jsindexTemplate = jsIndex = classes = null;
+	var jsIndex = jsindexTemplate.process(publish.classes);
+	IO.saveFile(publish.conf.outDir, ("jsIndex")+publish.conf.ext, jsIndex);
+	jsindexTemplate = jsIndex = classes = null;
 
 	// create the file index page
 	try {
@@ -168,10 +168,12 @@ function publish(symbolSet) {
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.cssDir+"handheld.css", publish.conf.outDir+"/"+publish.conf.cssDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.cssDir+"shCore.css", publish.conf.outDir+"/"+publish.conf.cssDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.cssDir+"shTheme.css", publish.conf.outDir+"/"+publish.conf.cssDir);
+	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.cssDir+"highlight.css", publish.conf.outDir+"/"+publish.conf.cssDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.jsDir+"all.js", publish.conf.outDir+"/"+publish.conf.jsDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.jsDir+"html5.js", publish.conf.outDir+"/"+publish.conf.jsDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.jsDir+"shCore.js", publish.conf.outDir+"/"+publish.conf.jsDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.jsDir+"shBrushJScript.js", publish.conf.outDir+"/"+publish.conf.jsDir);
+	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.jsDir+"highlight.js", publish.conf.outDir+"/"+publish.conf.jsDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.fontsDir+"mplus-1m-regular-webfont.eot", publish.conf.outDir+"/"+publish.conf.fontsDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.fontsDir+"mplus-1m-regular-webfont.svg", publish.conf.outDir+"/"+publish.conf.fontsDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.fontsDir+"mplus-1m-regular-webfont.ttf", publish.conf.outDir+"/"+publish.conf.fontsDir);
@@ -232,13 +234,46 @@ function makeSrcFile(path, srcDir, name) {
 
 	var src = {path: path, name:name, charset: IO.encoding, hilited: ""};
 
-	if (defined(JSDOC.PluginManager)) {
-		JSDOC.PluginManager.run("onPublishSrc", src);
+	if (src.path in JsHilite.cache) {
+		return; // already generated src code
 	}
+	else JsHilite.cache[src.path] = true;
 
-	if (src.hilited) {
-		IO.saveFile(srcDir, name+publish.conf.ext, src.hilited);
+	try {
+		var sourceCode = IO.readFile(src.path);
 	}
+	catch(e) {
+		print(e.message);
+		quit();
+	}
+	var formattedCode = String(sourceCode).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+	var lineNumbers = formattedCode.split("\n").length;
+	if(path.indexOf("\\")) {
+		var title = path.split("\\")[path.split("\\").length-1];
+	} else {
+		var title = path.split("/")[path.split("/").length-1];
+	}
+	var header = '<!DOCTYPE html>'+"\n"+
+	'<html>'+"\n"+
+	'<head>'+"\n"+
+	'<meta charset="utf-8"></meta>'+"\n"+
+	'<meta name="generator" content="JsDoc Toolkit"></meta>'+"\n"+
+	'<title>'+title+'</title>'+"\n"+
+	'<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>'+"\n"+
+	'<meta name="mobileoptimized" content="0"></meta>'+"\n"+
+	'<link rel="stylesheet" href="../../css/highlight.css" media="all"></link>'+"\n"+
+	'<script src="../../javascript/highlight.js"></script>'+"\n"+
+	'<style>'+"\n"+
+	'body {margin:0;}'+"\n"+
+	'pre ol {margin-left:'+(Math.floor(lineNumbers/100)+1)+'!important;}'+"\n"+
+	'</style>'+"\n"+
+	'</head>'+"\n"+
+	'<body>'+"\n"+
+	'<pre>'+"\n"+
+	'<code class="js">'+"\n";
+	var footer = "</code></pre>\n<script>\nSyntaxHighlighter.highlightDocument(true)\n</script>\n</body>\n</html>";
+	var hilited = header+formattedCode+footer;
+	IO.saveFile(srcDir, name+publish.conf.ext, hilited);
 }
 
 /** Build output for displaying function parameters. */
@@ -263,7 +298,7 @@ function makeSignature(params) {
 /** Find symbol {@link ...} strings in text and turn into html links */
 function resolveLinks(str, from) {
    str = str.replace(/\{@link ([^}]+)\}/gi,
-     function(match, symbolName) {
+	 function(match, symbolName) {
 	symbolName = symbolName.trim();
 	var index = symbolName.indexOf(' ');
 	if (index > 0) {
@@ -273,7 +308,7 @@ function resolveLinks(str, from) {
 	} else {
 	   return new Link().toSymbol(symbolName);
 	}
-     }
+	 }
    );
    return str;
 }

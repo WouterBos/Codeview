@@ -1016,11 +1016,53 @@ var sh = {
 	 */
 	all: function(params)
 	{
-		attachEvent(
-			window,
-			'load',
-			function() { sh.highlight(params); }
-		);
+        function contentLoaded(win, fn) {
+
+    var done = false, top = true,
+
+    doc = win.document, root = doc.documentElement,
+
+    add = doc.addEventListener ? 'addEventListener' : 'attachEvent',
+    rem = doc.addEventListener ? 'removeEventListener' : 'detachEvent',
+    pre = doc.addEventListener ? '' : 'on',
+
+    init = function(e) {
+        if (e.type == 'readystatechange' && doc.readyState != 'complete') return;
+        (e.type == 'load' ? win : doc)[rem](pre + e.type, init, false);
+        if (!done && (done = true)) fn.call(win, e.type || e);
+    },
+
+    poll = function() {
+        try { root.doScroll('left'); } catch(e) { setTimeout(poll, 50); return; }
+        init('poll');
+    };
+
+    if (doc.readyState == 'complete') fn.call(win, 'lazy');
+    else {
+        if (doc.createEventObject && root.doScroll) {
+            try { top = !win.frameElement; } catch(e) { }
+            if (top) poll();
+        }
+        doc[add](pre + 'DOMContentLoaded', init, false);
+        doc[add](pre + 'readystatechange', init, false);
+        win[add](pre + 'load', init, false);
+    }
+
+}console.log(params);
+contentLoaded(window,function() {
+    console.log(params);
+            sh.highlight(params);
+        })
+		// attachEvent(
+		// 	window,
+		// 	'load',
+		// 	function() { sh.highlight(params); }
+		// );
+        // var f = function() {
+        //     sh.highlight(params);
+        // };
+        // function r(f){/in/(document.readyState)?setTimeout(r,9,f):f()};
+        // r(f);
 	}
 }; // end of sh
 

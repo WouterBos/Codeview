@@ -14,9 +14,9 @@ JSDOC.PluginManager.registerPlugin(
 				print(e.message);
 				quit();
 			}
-
-			var hiliter = new JsHilite(sourceCode, src.charset);
-			src.hilited = hiliter.hilite(sourceCode);
+			formattedCode = String(sourceCode).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+			var hiliter = new JsHilite(formattedCode, src.charset);
+			src.hilited = hiliter.hilite(formattedCode);
 		}
 	}
 );
@@ -36,18 +36,24 @@ function JsHilite(src, charset) {
 		return "<span class=\""+this.type+"\">"+this.data.replace(/</g, "&lt;")+"</span>";
 	}
 
-	if (!charset) charset = "utf-8";
 
-	this.header = '<html><head><meta http-equiv="content-type" content="text/html; charset='+charset+'"> '+
-	'<link rel="stylesheet" href="../../css/shCore.css" media="all"></link>'+
-	'<link rel="stylesheet" href="../../css/shTheme.css" media="all"></link>'+
-	'<script src="../../javascript/shCore.js"></script>'+
-	'<script src="../../javascript/shBrushJScript.js"></script>'+
+	this.header = '<!DOCTYPE html>'+"\n"+
+	'<html>'+"\n"+
+	'<head>'+"\n"+
+	'<meta charset="utf-8"></meta>'+"\n"+
+	'<meta name="generator" content="JsDoc Toolkit"></meta>'+"\n"+
+	'<title>Source File</title>'+"\n"+
+	'<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>'+"\n"+
+	'<meta name="mobileoptimized" content="0"></meta>'+"\n"+
+	'<link rel="stylesheet" href="../../css/highlight.css" media="all"></link>'+"\n"+
+	// '<link rel="stylesheet" href="../../css/shTheme.css" media="all"></link>'+"\n"+
+	'<script src="../../javascript/highlight.js"></script>'+"\n"+
+	// '<script src="../../javascript/shBrushJScript.js"></script>'+"\n"+
 	"<style>\n\
 	body {margin:0;}\n\
 	.syntaxhighlighter{margin: 0em 0 0em 0 !important;}\n\
-	</style></head><body><pre class=\"brush: js\">";
-	this.footer = "</pre><script>SyntaxHighlighter.all()</script></body></html>";
+	</style>\n</head>\n<body>\n<pre><code class=\"js\">\n";
+	this.footer = "</code></pre>\n<script>\nSyntaxHighlighter.highlightDocument(true)\n</script>\n</body>\n</html>";
 	this.showLinenumbers = true;
 }
 

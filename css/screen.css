@@ -43,27 +43,23 @@ div.index div.menu {
 }
 
 div.index div.indexLinks {
-	/*margin-top: 13px;*/
-	padding: 8px 0 0 0;
+	margin-top: 13px;
 	position: absolute;
 	right: 30px;
 }
 
 div.index div.indexLinks a {
-	font-family: M1m, Arial, sans-serif;
-    font-size: 1.6em;
-	color: #3333CC;
+	color: #999999;
 	text-transform: lowercase;
-	margin-right: 2px;
-	margin-bottom: 0.5em;
-    border-right: 1px solid #999999;
-    padding-right: 4px;
+	margin-right: 3px;
+	border-right: 1px solid #999999;
+	padding-right: 5px;
 }
 
 div.index div.indexLinks a:last-child {
-	margin-right: 2px;
-	border-right: 0px;
-	padding-right: 4px;
+	margin-right: 3px;
+	border-right: 0px solid #999999;
+	padding-right: 5px;
 }
 
 div.index input.classFilter {
