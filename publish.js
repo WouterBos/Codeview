@@ -166,10 +166,10 @@ function publish(symbolSet) {
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.cssDir+"all.css", publish.conf.outDir+"/"+publish.conf.cssDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.cssDir+"screen.css", publish.conf.outDir+"/"+publish.conf.cssDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.cssDir+"handheld.css", publish.conf.outDir+"/"+publish.conf.cssDir);
-	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.cssDir+"highlight.css", publish.conf.outDir+"/"+publish.conf.cssDir);
+	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.cssDir+"highlightJavascript.css", publish.conf.outDir+"/"+publish.conf.cssDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.jsDir+"all.js", publish.conf.outDir+"/"+publish.conf.jsDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.jsDir+"html5.js", publish.conf.outDir+"/"+publish.conf.jsDir);
-	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.jsDir+"highlight.js", publish.conf.outDir+"/"+publish.conf.jsDir);
+	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.jsDir+"highlightJavascript.min.js", publish.conf.outDir+"/"+publish.conf.jsDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.fontsDir+"mplus-1m-regular-webfont.eot", publish.conf.outDir+"/"+publish.conf.fontsDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.fontsDir+"mplus-1m-regular-webfont.svg", publish.conf.outDir+"/"+publish.conf.fontsDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.fontsDir+"mplus-1m-regular-webfont.ttf", publish.conf.outDir+"/"+publish.conf.fontsDir);
@@ -257,8 +257,8 @@ function makeSrcFile(path, srcDir, name) {
 	'<title>'+title+'</title>'+"\n"+
 	'<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>'+"\n"+
 	'<meta name="mobileoptimized" content="0"></meta>'+"\n"+
-	'<link rel="stylesheet" href="../../css/highlight.css" media="all"></link>'+"\n"+
-	'<script src="../../javascript/highlight.js"></script>'+"\n"+
+	'<link rel="stylesheet" href="../../css/highlightJavascript.css" media="all"></link>'+"\n"+
+	'<script src="../../javascript/highlightJavascript.min.js"></script>'+"\n"+
 	'<style>'+"\n"+
 	'body {margin:0;}'+"\n"+
 	'pre ol {margin-left:'+(Math.floor(lineNumbers/100)+1)+'!important;}'+"\n"+
@@ -267,7 +267,7 @@ function makeSrcFile(path, srcDir, name) {
 	'<body>'+"\n"+
 	'<pre>'+"\n"+
 	'<code class="js">'+"\n";
-	var footer = "</code></pre>\n<script>\nSyntaxHighlighter.highlightDocument(true)\n</script>\n</body>\n</html>";
+	var footer = "</code></pre>\n<script>\nhighlightJavascript.format();\n</script>\n</body>\n</html>";
 	var hilited = header+formattedCode+footer;
 	IO.saveFile(srcDir, name+publish.conf.ext, hilited);
 }
