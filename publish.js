@@ -242,8 +242,6 @@ function makeSrcFile(path, srcDir, name) {
 		print(e.message);
 		quit();
 	}
-	var formattedCode = String(sourceCode).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-	var lineNumbers = formattedCode.split("\n").length;
 	if(path.indexOf("\\")) {
 		var title = path.split("\\")[path.split("\\").length-1];
 	} else {
@@ -261,14 +259,13 @@ function makeSrcFile(path, srcDir, name) {
 	'<script src="../../javascript/highlightJavascript.min.js"></script>'+"\n"+
 	'<style>'+"\n"+
 	'body {margin:0;}'+"\n"+
-	'pre ol {margin-left:'+(Math.floor(lineNumbers/100)+1)+'!important;}'+"\n"+
 	'</style>'+"\n"+
 	'</head>'+"\n"+
 	'<body>'+"\n"+
 	'<pre>'+"\n"+
 	'<code class="js">'+"\n";
 	var footer = "</code></pre>\n<script>\nhighlightJavascript.format();\n</script>\n</body>\n</html>";
-	var hilited = header+formattedCode+footer;
+	var hilited = header+sourceCode+footer;
 	IO.saveFile(srcDir, name+publish.conf.ext, hilited);
 }
 
