@@ -2,7 +2,15 @@
 pre {
 	background-color:rgba(238,238,238,0.9215);
 	margin:0;
+	overflow:auto;
+	white-space: pre-wrap; /* CSS 2.1 */
+	white-space: -pre-wrap; /* Opera 4-6 */
+	white-space: -o-pre-wrap; /* Opera 7 */
+	white-space: -moz-pre-wrap; /* Mozilla */
+	white-space: -hp-pre-wrap; /* HP Printers */
+	word-wrap: break-word; /* IE 5+ */
 }
+​
 pre code ol {
 	list-style-type:decimal-leading-zero;
 	margin:0;
@@ -57,4 +65,60 @@ pre code .function {
 }
 pre code .regex {
 	color:#FF0080;
+}
+
+::-webkit-scrollbar {
+	height:11px;
+	width:11px;
+}
+::-webkit-scrollbar-thumb {
+	-webkit-box-shadow:inset 1px 1px 0 rgba(0,0,0,.1),inset 0 -1px 0 rgba(0,0,0,.07);
+	background-color:rgba(0,0,0,.2);
+	min-height:28px;
+	padding-top:100px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	-webkit-box-shadow:inset 1px 1px 1px rgba(0,0,0,.25);
+	background-color:rgba(0,0,0,.4);
+}
+
+::-webkit-scrollbar-thumb:active {
+	-webkit-box-shadow:inset 1px 1px 3px rgba(0,0,0,.35);
+	background-color:rgba(0,0,0,.5);
+}
+::-webkit-scrollbar-track {
+	background:rgba(0,0,0,0.05);
+}
+
+::-webkit-scrollbar-track:vertical {
+	border-top:1px solid #ddd;
+	border-bottom:1px solid #ddd;
+}
+
+::-webkit-scrollbar-track:horizontal {
+	border-left:1px solid #ddd;
+	border-right:1px solid #ddd;
+}
+
+::-webkit-scrollbar-thumb:vertical {
+	border-width:0;
+	border-left-width:0px;
+	border-right-width:0px;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+	border-width:0;
+	border-bottom:0px;
+	border-top:0px;
+}
+
+::-webkit-scrollbar-track:hover {
+	-webkit-box-shadow:inset 1px 0 0 rgba(0,0,0,.1);
+	background-color:rgba(0,0,0,.05);
+}
+
+::-webkit-scrollbar-track:active {
+	-webkit-box-shadow:inset 1px 0 0 rgba(0,0,0,.14),inset -1px 0 0 rgba(0,0,0,.14);
+	background-color:rgba(0,0,0,.1);
 }

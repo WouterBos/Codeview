@@ -1,3 +1,7 @@
+/**
+ * highlightJavascript.js V0.9
+ * New in V0.9 - first stable release! Optomizations and comments to be added for 1.0
+ */
 (function(window) {
 	"use strict";
 	var document = window.document;
@@ -9,58 +13,271 @@
 			var start = "<ol>";
 			var end = "</ol>";
 			var code = input.innerHTML;
+			var internalRegex = {
+				/**
+				 * regex without whitespace
+				 * matches /
+				 * is not followed by a *
+				 * must contain one or more of pretty much anything
+				 * has a /
+				 * optional flags
+				 * is not followed by spaces, letters or numbers.
+				 * case insensitive.
+				 */
+				regex1: /\/(?![\*])(?:[\`\~\!\@\#\$\%\^\&\*\(\)\-\_\=\+\[\{\]\}\\\|\;\:\'\"\,\<\.\>\/\?a-z0-9])+\/[gim]*(?=\,|\;|\]|\)|\}|\n|\r|\n\r|$)(?![a-z0-9\040])/gi,
+				/**
+				 * regex with whitespace
+				 * matches /
+				 * is not followed by a *
+				 * must contain one or more of pretty much anything
+				 * has a /
+				 * optional flags
+				 * is not followed by spaces, letters or numbers.
+				 * case insensitive.
+				 */
+				regex2: /\/(?![\*])(?:\040*[\`\~\!\@\#\$\%\^\&\*\(\)\-\_\=\+\[\{\]\}\\\|\;\:\'\"\,\<\.\>\/\?a-z0-9])+\/[gim]*(?=\,|\;|\]|\)|\}|\n|\r|\n\r)(?![a-z0-9\040])/gi,
+				/**
+				 * numbers
+				 */
+				number: /\b[+-]?(?:(?:0x[A-Fa-f0-9]+)|(?:(?:[\d]*\.)?[\d]+(?:[eE][+-]?[\d]+)?))u?(?:(?:int(?:8|16|32|64))|L)?\b(?!\}\~)/g,
+				/**
+				 * matches and forgets '
+				 * matches and forgets ' or \
+				 * matches and forgets \ and all characters
+				 * matches and forgets '
+				 * or
+				 * matches and forgets "
+				 * matches and forgets " or \
+				 * matches and forgets \ and all characters
+				 * matches and forgets "
+				 */
+				string: /(?:'[^'\\]*(?:\\.[^'\\]*)*')|(?:"[^"\\]*(?:\\.[^"\\]*)*")/g,
+				/**
+				 * matches and remembers (1) whitespace
+				 * matches and remembers (1) one character of a letter, number or whitespace
+				 * matches and remembers (2) //
+				 * matches and remembers (2) all characters until new line
+				 * case insensitive
+				 */
+				singleComment: /\/\/.+?(?=\n|\r|$)/ig,
+				/**
+				 * matches / *
+				 * matches any whitespace and non whitespace
+				 * matches * /
+				 */
+				multiComment: /\/\*[\s\S]+?\*\//g,
+				/**
+				 * matches whitespace before or after string
+				 */
+				whiteSpace: /^\s+|\s+$/g,
+				/**
+				 * matches any carage return
+				 */
+				newline: /[\r\n]/g,
+				/**
+				 * matches "
+				 */
+				quote: /"/g,
+				/**
+				 * matches <
+				 */
+				lessthan: /</g,
+				/**
+				 * matches >
+				 */
+				greaterthan: />/g,
+				/**
+				 * matches &
+				 */
+				ampersand: /&/g,
+				/**
+				 * matches ~{
+				 * matches and remembers (1) specific words
+				 * followed by -
+				 * matches and remembers (2) 0-9 one or more times
+				 * followed by }~
+				 * case insensitive
+				 */
+				temporary: /~{(string|link|code|singleComment|multiComment|lessthan|greaterthan|ampersand|quote|escaped)\-([0-9]+)}~/ig,
+				/**
+				 * matches <a
+				 * with href="..."
+				 * and other attributes
+				 * matches >
+				 * matches text
+				 * matches </a>
+				 */
+				link: /\<a\b href\=\"[htpfs]+\:\/\/[^"]+\"[^>]*\>(?:.*?)\<\/a\>/g,
+				/**
+				 * matches <
+				 * matches and forgets ! or /
+				 * matches alpha-numeric tag name
+				 * matches and forgets attributes
+				 * matches >
+				 */
+				tag: /\<(?:\!|\/)?[a-z][a-z0-1\-]\s*(?:[^>]+)?\>/ig,
+				/**
+				 * matches url
+				 */
+				url: /(?:http|ftp|https):\/\/[\w\-_]+(?:\.[\w\-_]+)+(?:[\w\-\.,@?^=%&amp;:\/~\+#]*[\w\-\@?^=%&amp;\/~\+#])?/g
+			};
 			var data = {
-				comment: {},
+				singleComment: {},
+				multiComment: {},
 				string: {},
 				code: {},
-				link: {}
+				link: {},
+				lessthan: {"0":"&lt;"},
+				greaterthan: {"0":"&gt;"},
+				ampersand: {"0":"&amp;"},
+				quote: {"0":"&quot;"},
+				escaped: {}
 			};
+			var regex = {};
 			/**
 			 * Make a reference to the language values. Javascript language definition is included by default.
 			 */
-			var regex = language.regex;
+			for (var attr in internalRegex) {
+				if (internalRegex.hasOwnProperty(attr)) {
+					if (language.regex[attr]) {
+						regex[attr] = language.regex[attr];
+					} else {
+						regex[attr] = internalRegex[attr];
+					}
+				}
+			}
+			for (var attr in language.regex) {
+				if (language.regex.hasOwnProperty(attr)) {
+					if (!regex[attr]) {
+						regex[attr] = language.regex[attr];
+					}
+				}
+			}
+			// var regex = language.regex;
 			var regexList = language.regexList;
-			var types = ["comment", "string"];
+			var types = ["singleComment", "multiComment", "string"];
 			var i = 0;
 			var e = 0;
 			/**
-			 * remove beginning and trailing newlines and whitespace for the script to work properly.
+			 * remove beginning and trailing whitespace for the script to work properly.
 			 */
-			// code = code.replace(/^\s+|\s+$/g,"");
+			code = code.replace(internalRegex.whiteSpace, "");
 			/**
 			 * Functions defined outside of all loops in order to prevent having to recreate them repeatedly.
 			 */
-			var offsetFunctions = [function(string, offset) {
+			var offsetFunctions = [];
+			offsetFunctions[0] = function(string, offset) {
 				data.link[offset] = string;
 				return "~{link-" + offset + "}~";
-			}, function(string) {
-				string = string.replace("<","&lt;");
-				string = string.replace(">","&gt;");
+			};
+			offsetFunctions[1] = function(string) {
+				var zero = 0;
+				var originalString = string;
+				string = string.replace(internalRegex.quote, function(string, offset) {
+					return "~{quote-"+zero+"}~";
+				});
+				string = string.replace(internalRegex.ampersand, function(string, offset) {
+					return "~{ampersand-"+zero+"}~";
+				});
+				string = string.replace(internalRegex.lessthan, function(string, offset) {
+					return "~{lessthan-"+zero+"}~";
+				});
+				string = string.replace(internalRegex.greaterthan, function(string, offset) {
+					return "~{greaterthan-"+zero+"}~";
+				});
 				return string
-			}, function(string) {
-				return "<a href=\"" + string + "\">" + string + "</a>";
-			}, function(string, offset) {
+			};
+			offsetFunctions[2] = function(string, offset) {
+				data.link[offset] = "<a href=\"" + string + "\">" + string + "</a>";
+				return "~{link-" + offset + "}~";
+			};
+			offsetFunctions[3] = function(string, offset, code) {
+				if(code.charAt(offset-1) === "\\" || code.charAt(offset-1) === "<") {
+					return string;
+				}
+				var match = false;
+				if (type === "string" && regex.escaped && string.match(regex.escaped)) {
+					match = true;
+					//parse escaped characters
+					string = string.replace(regex.escaped, offsetFunctions[8]);
+				}
+				/**
+				 * Parse html enabling code out of equation
+				 */
+				string = offsetFunctions[1](string);
 				data[type][offset] = string;
 				return "~{" + type + "-" + offset + "}~";
-			}, function(string) {
-				return "</span>" + string + "<span class=\"" + type + "\">";
-			}, function(string) {
-				data.code[e] = "<span class=\"" + regexList[i].css + "\">" + string + "</span>";
+			};
+			offsetFunctions[4] = function(string) {
+
+				return "</span>" + string + "<span class=\"" + style + "\">";
+			};
+			offsetFunctions[5] = function(string) {
+				/**
+				 * Parse html enabling code out of equation
+				 */
+				var newString = offsetFunctions[1](string);
+				data.code[e] = "<span class=\"" + regexList[i].css + "\">" + newString + "</span>";
 				e = e + 1;
 				return "~{code-" + (e - 1) + "}~";
-			}, function(string) {
-				name = string.split("{")[1].split("-")[0];
-				id = string.split("{")[1].split("-")[1].split("}")[0];
-				console.log(name,id,string);
-				return data[name][id];
-			}];
-			code = code.replace(/\<A\b[^>]*\>(?:.*?)\<\/A\>/ig,offsetFunctions[0])
+			};
+			offsetFunctions[6] = function(string, name, number) {
+				return data[name][number];
+			};
+			offsetFunctions[7] = function(string, offset, code) {
+				//parse escaped characters
+				if (regex.escaped) {
+					string = string.replace(regex.escaped, offsetFunctions[8]);
+				}
+				/**
+				 * Remove any brackets that may cause the browser to parse the code as html
+				 */
+				var newString = offsetFunctions[1](string);
+				data.code[e] = "<span class=\"regex\">" + newString + "</span>";
+				e = e + 1;
+				return "~{code-" + (e - 1) + "}~";
+			};
+			offsetFunctions[8] = function(string) {
+				/**
+				 * Remove any brackets that may cause the browser to parse the code as html
+				 */
+				var newString = offsetFunctions[1](string);
+				data.escaped[e] = "<span class=\"constant\">" + newString + "</span>";
+				e = e + 1;
+				return "~{escaped-" + (e - 1) + "}~";
+			};
+			offsetFunctions[9] = function(string, offset, code) {
+				if(code.charAt(offset-1) === "\\" || code.charAt(offset-1) === "<") {
+					return string;
+				}
+				//parse escaped characters
+				if (regex.escaped) {
+					string = string.replace(regex.escaped, offsetFunctions[8]);
+				}
+				/**
+				 * Remove any brackets that may cause the browser to parse the code as html
+				 */
+				var newString = offsetFunctions[1](string);
+				data.code[e] = "<span class=\"regex\">" + newString + "</span>";
+				e = e + 1;
+				return "~{code-" + (e - 1) + "}~";
+			};
+			/**
+			 * remove any unnecessary formatting
+			 */
+			// code = code.replace(/&amp;/ig,"&");
+			// code = code.replace(/&lt;/ig,"<");
+			// code = code.replace(/&gt;/ig,">");
+			/**
+			 * save links
+			 */
+			code = code.replace(regex.link, offsetFunctions[0])
 			/**
 			 * Used to fix issue caused by <pre><code class="">...</code></pre> being within the code.
 			 * The browser would read the tags and implement them, causing undesired effects.
 			 * In reality we want the tags to show up as text, not be rendered.
 			 */
-			code = code.replace(/\<\/?(?:code|pre)\s*(?:[^>]+)?\>/ig,offsetFunctions[1]);
+
 			/**
 			 * Interpret urls as links.
 			 */
@@ -73,6 +290,15 @@
 			 */
 			for (i = 0; i < types.length; i++) {
 				type = types[i];
+				/**
+				 * Match regex before comments so that they are mapped out properly
+				 */
+				if (type === "string" && code.match(regex.regex1)) {
+					code = code.replace(regex.regex1, offsetFunctions[9]);
+				}
+				if (type === "string" && code.match(regex.regex2)) {
+					code = code.replace(regex.regex2, offsetFunctions[7]);
+				}
 				if (code.match(regex[type])) {
 					code = code.replace(regex[type], offsetFunctions[3]);
 					for (attr in data[type]) {
@@ -80,7 +306,12 @@
 						 * If Object.prototype has been modified we need the below line.
 						 */
 						if (data[type].hasOwnProperty(attr)) {
-							data[type][attr] = "<span class=\"" + type + "\">" + data[type][attr];
+							if (type.indexOf("Comment") > -1) {
+								var style = "comment";
+							} else {
+								var style = "string";
+							}
+							data[type][attr] = "<span class=\"" + style + "\">" + data[type][attr];
 							if (data[type][attr].match(regex.newline)) {
 								data[type][attr] = data[type][attr].replace(regex.newline, offsetFunctions[4]);
 							}
@@ -100,15 +331,12 @@
 			/**
 			 * Replace all temporary code placeholders with the parsed values. This prevents duplicate parsing.
 			 */
-			for(var attr in data) {
-				if(data.hasOwnProperty(attr)) {
-					for(var i in data[attr]) {
-						if(data[attr].hasOwnProperty(i)) {
-							code = code.replace("~{"+attr+"-"+i+"}~",data[attr][i]);
-						}
-					}
-				}
+			while (code.match(regex.temporary)) {
+				code = code.replace(internalRegex.temporary, offsetFunctions[6]);
 			}
+			// if(regex.escaped) {
+			// 	code = code.replace(regex.escaped, offsetFunctions[8]);
+			// }
 			/**
 			 * Split newlines into list items for proper numbering.
 			 */
@@ -116,9 +344,6 @@
 				code = code.split(regex.newline);
 				code = code.join("</span></li><li><span>");
 			}
-			/**
-			 * Todo, code may start and end with linebreak, make sure to remove initial and trailing linebreaks at start of parsing.
-			 */
 			code = "<li><span>" + code + "</span></li>";
 			/**
 			 * Replace pre tag code with parsed code.
@@ -128,15 +353,15 @@
 			 * Style for newlines.
 			 */
 			if (options && ((options[selector] && options[selector].indexOf("nolines") > -1) || options.all.indexOf("nolines") > -1)) {
-				element.children[0].style.marginLeft = "5px";
+				element.children[0].style.marginLeft = "-2em";
 				element.children[0].style.listStyleType = "none";
 			} else {
 				lines = ((originalCode.indexOf("\n") !== -1) ? originalCode.split("\n") : originalCode.split("\r")).length;
 				if (lines > 100) {
-					if(lines > 1000) {
-						element.children[0].style.marginLeft = "5em";
+					if (lines > 1000) {
+						element.children[0].style.marginLeft = "3em";
 					} else {
-						element.children[0].style.marginLeft = "4em";
+						element.children[0].style.marginLeft = "2em";
 					}
 				}
 			}
@@ -160,12 +385,12 @@
 			/**
 			 * Used to counter a really friggin annoying issue where parentNode was null or undefined.
 			 */
-			if(codeList[i].parentElement) {
+			if (codeList[i].parentElement) {
 				var parentName = codeList[i].parentElement.parentElement.nodeName.toLowerCase();
 				/**
 				 * make sure we aren't grabbing any child code tags, those should be parsed to text.
 				 */
-				if(parentName !== "code" && parentName !== "pre") {
+				if (parentName !== "code" && parentName !== "pre") {
 					if (highlightJavascript.language[codeList[i].className]) {
 						highlightJavascript(codeList[i], formattedOptions, highlightJavascript.language[codeList[i].className]);
 					} else {
@@ -183,20 +408,17 @@
 		var lang = ["NaN", "true", "false", "undefined", "null"];
 		var constant = ["arguments", "caller", "constructor", "keys", "prototype", "MAX_VALUE", "MIN_VALUE", "NEGATIVE_INFINITY", "POSITIVE_INFINITY", "multiline", "lastMatch", "lastParen", "leftContext", "length", "name", "rightContext", "input"];
 		var regex = {
-			"url": /(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:\/~\+#]*[\w\-\@?^=%&amp;\/~\+#])?/g,
-			"comment": /\/\/.+?(?=\n|\r|$)|\/\*[\s\S]+?\*\//g,
-			"string": /(?:"|')[^(?:"|')\\]*(?:\\.[^(?:"|')\\]*)*(?:"|')/g,
+			"singleComment": /\/\/.+?(?=\n|\r|$)/ig,
+			"multiComment": /\/\*[\s\S]+?\*\//g,
+			"string": /(?:'[^'\\]*(?:\\.[^'\\]*)*')|(?:"[^"\\]*(?:\\.[^"\\]*)*")/g,
 			"number": /\b[+-]?(?:(?:0x[A-Fa-f0-9]+)|(?:(?:[\d]*\.)?[\d]+(?:[eE][+-]?[\d]+)?))u?(?:(?:int(?:8|16|32|64))|L)?\b(?!\}\~)/g,
-			"newline": /[\r\n]/g,
 			"math": /(\||\+|\=|\-|\/|\>|\<|\!|\?|\&|\%|\$)(?![0-9]*}~)/g,
 			"bracket": /\{|\}|\(|\)|\[|\]/g,
+			"tag": /\<(?:\!|\/)?[a-z][a-z0-1\-]\s*(?:[^>]+)?\>/ig,
 			"function": /\b(?!function|if|else|for|while|with|try)(?:[A-Za-z]|_)[A-Za-z0-9_]*(?=[ \t]*\()/g,
-			"regex": /\/(?:\\.|[^*\\\/])(?:\\.|[^\\\/])*\/[gim]*/g
+			"escaped": /\\(?:0[0-3][0-7][0-7]|[0-3][0-7][0-7]|[0-7][0-7]|[0-9]|.)/g
 		};
 		var regexList = [{
-			regex: regex.regex,
-			css: "regex"
-		}, {
 			regex: new RegExp(sh.getKeywords(nativeVar), 'gm'),
 			css: "native"
 		}, {
@@ -211,6 +433,9 @@
 		}, {
 			regex: new RegExp(sh.getKeywords(constant), 'gm'),
 			css: "constant"
+		}, {
+			regex: regex.tag,
+			css: "constructs"
 		}, {
 			regex: regex.number,
 			css: "number"
