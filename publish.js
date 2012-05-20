@@ -169,7 +169,7 @@ function publish(symbolSet) {
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.cssDir+"highlightJavascript.css", publish.conf.outDir+"/"+publish.conf.cssDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.jsDir+"all.js", publish.conf.outDir+"/"+publish.conf.jsDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.jsDir+"html5.js", publish.conf.outDir+"/"+publish.conf.jsDir);
-	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.jsDir+"highlightJavascript.min.js", publish.conf.outDir+"/"+publish.conf.jsDir);
+	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.jsDir+"highlightJavascript.js", publish.conf.outDir+"/"+publish.conf.jsDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.fontsDir+"mplus-1m-regular-webfont.eot", publish.conf.outDir+"/"+publish.conf.fontsDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.fontsDir+"mplus-1m-regular-webfont.svg", publish.conf.outDir+"/"+publish.conf.fontsDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.fontsDir+"mplus-1m-regular-webfont.ttf", publish.conf.outDir+"/"+publish.conf.fontsDir);
@@ -256,7 +256,7 @@ function makeSrcFile(path, srcDir, name) {
 	'<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>'+"\n"+
 	'<meta name="mobileoptimized" content="0"></meta>'+"\n"+
 	'<link rel="stylesheet" href="../../css/highlightJavascript.css" media="all"></link>'+"\n"+
-	'<script src="../../javascript/highlightJavascript.min.js"></script>'+"\n"+
+	'<script src="../../javascript/highlightJavascript.js"></script>'+"\n"+
 	'<style>'+"\n"+
 	'body {margin:0;}'+"\n"+
 	'</style>'+"\n"+

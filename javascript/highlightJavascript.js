@@ -173,18 +173,26 @@
 			offsetFunctions[1] = function(string) {
 				var zero = 0;
 				var originalString = string;
-				string = string.replace(internalRegex.quote, function(string, offset) {
-					return "~{quote-"+zero+"}~";
-				});
-				string = string.replace(internalRegex.ampersand, function(string, offset) {
-					return "~{ampersand-"+zero+"}~";
-				});
-				string = string.replace(internalRegex.lessthan, function(string, offset) {
-					return "~{lessthan-"+zero+"}~";
-				});
-				string = string.replace(internalRegex.greaterthan, function(string, offset) {
-					return "~{greaterthan-"+zero+"}~";
-				});
+				if(string.match(internalRegex.quote)) {
+					string = string.replace(internalRegex.quote, function(string, offset) {
+						return "~{quote-"+zero+"}~";
+					});
+				}
+				if(string.match(internalRegex.ampersand)) {
+					string = string.replace(internalRegex.ampersand, function(string, offset) {
+						return "~{ampersand-"+zero+"}~";
+					});
+				}
+				if(string.match(internalRegex.lessthan)) {
+					string = string.replace(internalRegex.lessthan, function(string, offset) {
+						return "~{lessthan-"+zero+"}~";
+					});
+				}
+				if(string.match(internalRegex.greaterthan)) {
+					string = string.replace(internalRegex.greaterthan, function(string, offset) {
+						return "~{greaterthan-"+zero+"}~";
+					});
+				}
 				return string
 			};
 			offsetFunctions[2] = function(string, offset) {
@@ -265,9 +273,9 @@
 			/**
 			 * remove any unnecessary formatting
 			 */
-			// code = code.replace(/&amp;/ig,"&");
-			// code = code.replace(/&lt;/ig,"<");
-			// code = code.replace(/&gt;/ig,">");
+			code = code.replace(/&amp;/ig,"&");
+			code = code.replace(/&lt;/ig,"<");
+			code = code.replace(/&gt;/ig,">");
 			/**
 			 * save links
 			 */
@@ -353,15 +361,15 @@
 			 * Style for newlines.
 			 */
 			if (options && ((options[selector] && options[selector].indexOf("nolines") > -1) || options.all.indexOf("nolines") > -1)) {
-				element.children[0].style.marginLeft = "-2em";
+				element.children[0].style.marginLeft = "5px";
 				element.children[0].style.listStyleType = "none";
 			} else {
 				lines = ((originalCode.indexOf("\n") !== -1) ? originalCode.split("\n") : originalCode.split("\r")).length;
 				if (lines > 100) {
 					if (lines > 1000) {
-						element.children[0].style.marginLeft = "3em";
+						element.children[0].style.marginLeft = "5em";
 					} else {
-						element.children[0].style.marginLeft = "2em";
+						element.children[0].style.marginLeft = "4em";
 					}
 				}
 			}
