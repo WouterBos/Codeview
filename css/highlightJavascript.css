@@ -2,13 +2,7 @@
 pre {
 	background-color:rgba(238,238,238,0.9215);
 	margin:0;
-	/*overflow:auto;
-	white-space: pre-wrap;
-	white-space: -pre-wrap;
-	white-space: -o-pre-wrap;
-	white-space: -moz-pre-wrap;
-	white-space: -hp-pre-wrap;
-	word-wrap: break-word;*/
+	overflow:auto;
 }
 
 ol {
@@ -19,7 +13,14 @@ ol {
 	margin-bottom:0!important;
 	padding:0;
 	display:inline-block;
+	max-width:97%;
 	background-color:rgba(238,238,238,0.9215);
+	white-space: pre-wrap;
+	white-space: -pre-wrap;
+	white-space: -o-pre-wrap;
+	white-space: -moz-pre-wrap;
+	white-space: -hp-pre-wrap;
+	word-wrap: break-word;
 }
 pre code li {
 	font-family: Consolas, "Courier New";

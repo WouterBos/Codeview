@@ -263,8 +263,9 @@ function makeSrcFile(path, srcDir, name) {
 	'</head>'+"\n"+
 	'<body>'+"\n"+
 	'<pre>'+"\n"+
-	'<code class="js">'+"\n";
-	var footer = "</code></pre>\n<script>\nhighlightJavascript.format();\n</script>\n</body>\n</html>";
+	'<code class="js">'+"\n"+
+	'<script>'+"\n";
+	var footer = "</script>\n</code>\n</pre>\n<script>\nhighlightJavascript.format('parsed');\n</script>\n</body>\n</html>";
 	var hilited = header+sourceCode+footer;
 	IO.saveFile(srcDir, name+publish.conf.ext, hilited);
 }

@@ -24,7 +24,7 @@
 				 * is not followed by spaces, letters or numbers.
 				 * case insensitive.
 				 */
-				regex1: /\/(?![\*])(?:[\`\~\!\@\#\$\%\^\&\*\(\)\-\_\=\+\[\{\]\}\\\|\;\:\'\"\,\<\.\>\/\?a-z0-9])+\/[gim]*(?=\,|\;|\]|\)|\}|\n|\r|\n\r|$)(?![a-z0-9\040])/gi,
+				regex1: /\/(?![\*])(?:[\`\~\!\@\#\$\%\^\&\*\(\)\-\_\=\+\[\{\]\}\\\|\;\:\'\"\,\<\.\>\/\?a-z0-9])+\/[gim\040]*(?=\,|\.|\;|\]|\)|\}|\n|\r|\n\r|$)(?![a-z0-9\040])/gi,
 				/**
 				 * regex with whitespace
 				 * matches /
@@ -35,7 +35,7 @@
 				 * is not followed by spaces, letters or numbers.
 				 * case insensitive.
 				 */
-				regex2: /\/(?![\*])(?:\040*[\`\~\!\@\#\$\%\^\&\*\(\)\-\_\=\+\[\{\]\}\\\|\;\:\'\"\,\<\.\>\/\?a-z0-9])+\/[gim]*(?=\,|\;|\]|\)|\}|\n|\r|\n\r)(?![a-z0-9\040])/gi,
+				regex2: /\/(?![\*])(?:\040*[\`\~\!\@\#\$\%\^\&\*\(\)\-\_\=\+\[\{\]\}\\\|\;\:\'\"\,\<\.\>\/\?a-z0-9])+\/[gim\040]*(?=\,|\.|\;|\]|\)|\}|\n|\r|\n\r|$)(?![a-z0-9\040])/gi,
 				/**
 				 * numbers
 				 */
@@ -156,6 +156,8 @@
 			// var regex = language.regex;
 			var regexList = language.regexList;
 			var types = ["singleComment", "multiComment", "string"];
+			// characters that break things
+			var badChars = ["\\","<","*","."];
 			var i = 0;
 			var e = 0;
 			/**
@@ -200,7 +202,8 @@
 				return "~{link-" + offset + "}~";
 			};
 			offsetFunctions[3] = function(string, offset, code) {
-				if(code.charAt(offset-1) === "\\" || code.charAt(offset-1) === "<") {
+				if(badChars.indexOf(code.charAt(offset-1)) > -1 || code.charAt(offset-1) === "\"") {
+					console.log(string);
 					return string;
 				}
 				var match = false;
@@ -255,7 +258,8 @@
 				return "~{escaped-" + (e - 1) + "}~";
 			};
 			offsetFunctions[9] = function(string, offset, code) {
-				if(code.charAt(offset-1) === "\\" || code.charAt(offset-1) === "<") {
+				if(badChars.indexOf(code.charAt(offset-1)) > -1) {
+					console.log(string);
 					return string;
 				}
 				//parse escaped characters
@@ -273,9 +277,11 @@
 			/**
 			 * remove any unnecessary formatting
 			 */
-			code = code.replace(/&amp;/ig,"&");
-			code = code.replace(/&lt;/ig,"<");
-			code = code.replace(/&gt;/ig,">");
+			if(options && options.all.indexOf("parsed") > -1) {
+				code = code.replace(/&amp;/ig,"&");
+				code = code.replace(/&lt;/ig,"<");
+				code = code.replace(/&gt;/ig,">");
+			}
 			/**
 			 * save links
 			 */
@@ -304,9 +310,6 @@
 				if (type === "string" && code.match(regex.regex1)) {
 					code = code.replace(regex.regex1, offsetFunctions[9]);
 				}
-				if (type === "string" && code.match(regex.regex2)) {
-					code = code.replace(regex.regex2, offsetFunctions[7]);
-				}
 				if (code.match(regex[type])) {
 					code = code.replace(regex[type], offsetFunctions[3]);
 					for (attr in data[type]) {
@@ -326,6 +329,9 @@
 							data[type][attr] = data[type][attr] + "</span>";
 						}
 					}
+				}
+				if (type === "string" && code.match(regex.regex2)) {
+					code = code.replace(regex.regex2, offsetFunctions[7]);
 				}
 			}
 			/**
@@ -385,6 +391,11 @@
 			if (options === "nolines") {
 				formattedOptions = {
 					"all": ["nolines"]
+				};
+			}
+			if(options === "parsed") {
+				formattedOptions = {
+					"all": ["parsed"]
 				};
 			}
 		}
