@@ -1,14 +1,16 @@
 <div class="index">
 	<div class="menu">
 		<div class="indexLinks">
+
 			{+new Link().toFile(JSDOC.opt.D.index=="files"?"allclasses.html":"index.html").withText("Classes")+}
+			{+new Link().toFile("jsIndex.html").withText("js")+}
 			{+new Link().toFile(JSDOC.opt.D.index=="files"?"index.html":"files.html").withText("Files")+}
 		</div>
-	
-		<h2 class="heading1">Classes</h2>
-		
+
+        <h2 class="heading1">Filter</h2>
+
 		<input type="text" name="classFilter" class="classFilter" id="ClassFilter" placeholder="Filter"></input>
-		
+
 		<nav>
 			<ul class="classList" id="ClassList">
 				<for each="thisClass" in="publish.classes">
@@ -21,22 +23,23 @@
 		</nav>
 	</div>
 	<div class="fineprint" style="clear:both">
-		<footer>
-			<if test="JSDOC.opt.D.copyright">&copy;{+JSDOC.opt.D.copyright+}<br /></if>
-			Documentation generator: <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> {+JSDOC.VERSION+}<br />
-			Template: <a href="{+publish.conf.templateLink+}" target="_blank">{+publish.conf.templateName+}</a> {+publish.conf.templateVersion+}<br />
-			Generated on:
-			{!
-				var date = new Date();
-				var minutes = date.getMinutes() +"";
-				if (minutes.length == 1) {
-					minutes = '0'+ minutes;
-				}
-				var timeHuman = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate() + " " + date.getHours() + ":" + minutes;
-				var timeData = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate();
-				output += "<time datetime='"+ timeData +"' pubdate>" + timeHuman +"</time>";
-			!}
-		</footer>
+		<if test="JSDOC.opt.D.copyright">&copy;{+JSDOC.opt.D.copyright+}<br /></if>
+		Documentation generator: <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> {+JSDOC.VERSION+}<br />
+		Template: <a href="{+publish.conf.templateLink+}" target="_blank">{+publish.conf.templateName+}</a> {+publish.conf.templateVersion+}<br />
+		Generated on:
+		{!
+			var date = new Date();
+			var d = date.getDate();
+			d = (d <= 9 ? '0'+d : d);
+			var m = date.getMonth()+1;
+			m = (m <= 9 ? '0'+m : m);
+			var y = date.getFullYear();
+			var min = date.getMinutes();
+			var t = date.getHours() + ":" + ((min <= 9) ? '0'+min : min);
+			var timeData = [y,m,d].join('-');
+			var timeHuman = timeData+' '+t;
+			output += "<time datetime='"+ timeData +"' pubdate>" + timeHuman +"</time>";
+		!}
 	</div>
 </div>
 
