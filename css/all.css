@@ -138,7 +138,7 @@ p {
  */
 
 
- 
+
 /*
  * BEGIN HACK
  */
@@ -170,7 +170,7 @@ div.index *.heading1 {
 	letter-spacing: 1px;
 	line-height: 1.3em;
 }
- 
+
 div.index div.menu {
 	background-color: #FFFFFF;
 }
@@ -224,7 +224,11 @@ div.content *.classTitle {
 	font-weight: bold;
 	line-height: 1em;
 }
-
+div.content .classType {
+    font-size:1.5em;
+    font-weight:bold;
+    text-align: left;
+}
 div.content *.classTitle span {
 	display: block;
 	font-size: 2em;
@@ -261,7 +265,6 @@ div.content div.props {
 	-webkit-box-shadow: 0px 0px 5px #bbb;
 	box-shadow: 0px 0px 5px #bbb;
 }
-
 
 
 *.sectionTitle {
@@ -316,12 +319,12 @@ dl.inheritsList dd {
 }
 
 .fixedFont.heading {
-	font-size: 1.25em;
+	font-size: 1.3em;
 	line-height: 1.1em
 }
 
 .fixedFont.heading + .description {
-	font-size: 1.2em;
+	font-size: 1.1em;
 }
 
 .fixedFont.heading .light,
