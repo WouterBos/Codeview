@@ -163,13 +163,11 @@ function publish(symbolSet) {
 	fileindexTemplate = filesIndex = files = null;
 
 	// copy static files
-	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.cssDir+"all.css", publish.conf.outDir+"/"+publish.conf.cssDir);
+	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.cssDir+"all.min.css", publish.conf.outDir+"/"+publish.conf.cssDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.cssDir+"screen.css", publish.conf.outDir+"/"+publish.conf.cssDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.cssDir+"handheld.css", publish.conf.outDir+"/"+publish.conf.cssDir);
-	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.cssDir+"highlightJavascript.css", publish.conf.outDir+"/"+publish.conf.cssDir);
-	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.jsDir+"all.js", publish.conf.outDir+"/"+publish.conf.jsDir);
+	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.jsDir+"all.min.js", publish.conf.outDir+"/"+publish.conf.jsDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.jsDir+"html5.js", publish.conf.outDir+"/"+publish.conf.jsDir);
-	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.jsDir+"highlightJavascript.js", publish.conf.outDir+"/"+publish.conf.jsDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.fontsDir+"mplus-1m-regular-webfont.eot", publish.conf.outDir+"/"+publish.conf.fontsDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.fontsDir+"mplus-1m-regular-webfont.svg", publish.conf.outDir+"/"+publish.conf.fontsDir);
 	IO.copyFile(publish.conf.templatesDir+"/"+publish.conf.fontsDir+"mplus-1m-regular-webfont.ttf", publish.conf.outDir+"/"+publish.conf.fontsDir);
